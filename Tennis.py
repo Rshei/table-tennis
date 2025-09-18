@@ -19,14 +19,7 @@ def generate_bracket(participants):
 
     return bracket
 
-def visualize_bracket(bracket):
-    for i, round_matches in enumerate(bracket):
-        st.write(f"Round {i+1}:")
-        for j, match in enumerate(round_matches):
-            if match[1] is not None:
-                st.write(f"Match {j+1}: {match[0]} vs {match[1]}")
-            else:
-                st.write(f"Match {j+1}: {match[0]} (BYE)")
+
 
 def main():
     st.title("Tournament Bracket Generator")
