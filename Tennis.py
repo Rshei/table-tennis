@@ -40,27 +40,22 @@ if st.button("Generate Bracket"):
         st.error("At least 2 participants are required to generate a bracket.")
     else:
         random.shuffle(st.session_state.participants)
+        participants = st.session_state.participants[:]
         st.session_state.matches = []
-        for i in range(len(st.session_state.participants) // 2):
-            st.session_state.matches.append((st.session_state.participants[i], st.session_state.participants[len(st.session_state.participants) - i - 1]))
+        while len(participants) > 1:
+            round_matches = []
+            for i in range(len(participants) // 2):
+                round_matches.append((participants[i], participants[len(participants) - i - 1]))
+            if len(participants) % 2 != 0:
+                round_matches.append((participants[len(participants) // 2], "BYE"))
+            st.session_state.matches.append(round_matches)
+            participants = [f"Winner of Match {i+1}" for i in range(len(round_matches))]
         st.success("Bracket generated successfully!")
 
 # Display tournament bracket
 if st.session_state.matches:
     st.header("Tournament Matches")
-    for i, match in enumerate(st.session_state.matches):
-        st.write(f"Match {i+1}: {match[0]} vs {match[1]}")
-
-# Winner selection
-st.header("Select Winner")
-if st.session_state.matches:
-    match_number = st.selectbox("Select Match", range(1, len(st.session_state.matches) + 1))
-    winner = st.selectbox("Select Winner", [st.session_state.matches[match_number - 1][0], st.session_state.matches[match_number - 1][1]])
-    if st.button("Submit Winner"):
-        st.session_state.winner = winner
-        st.success(f"Winner of Match {match_number} is {winner}!")
-
-# Display winner
-if st.session_state.winner:
-    st.header("Tournament Winner")
-    st.write(st.session_state.winner)
+    for i, round_matches in enumerate(st.session_state.matches):
+        st.write(f"Round {i+1}:")
+        for j, match in enumerate(round_matches):
+            st.write(f"Match {j+1}: {match[0]} vs {match[1]}")
