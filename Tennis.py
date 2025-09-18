@@ -90,7 +90,8 @@ def build_react_flow_elements(matches):
 if st.session_state.matches:
     st.header("Bracket Visualization")
     nodes, edges = build_react_flow_elements(st.session_state.matches)
-    react_flow(nodes, edges, fit_view=True, style={"width": "100%", "height": "500px", "background": "#f0f2f6"})
+    # Removed fit_view=True, not supported by current streamlit-react-flow
+    react_flow(nodes, edges, style={"width": "100%", "height": "500px", "background": "#f0f2f6"})
 
     # Winner selection UI (keep as before, below the visualization)
     for i, round_matches in enumerate(st.session_state.matches):
