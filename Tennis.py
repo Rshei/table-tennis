@@ -8,7 +8,7 @@ if 'participants' not in st.session_state:
 if 'matches' not in st.session_state:
     st.session_state.matches = []
 if 'winners' not in st.session_state:
-    st.session_state.winners = {}
+    st.session_state.winners = {} 
 if 'current_round' not in st.session_state:
     st.session_state.current_round = 0
 
@@ -98,7 +98,7 @@ if st.session_state.matches:
         for j, match in enumerate(round_matches):
             if i == st.session_state.current_round:
                 winner = st.selectbox(f"Match {j+1} Winner", [match[0], match[1]])
-                if st.button(f"Submit Winner for Match {j+1}"):
+                if st.button(f"Submit Winner for Match {j+1}"): 
                     st.session_state.winners[f"Match {j+1}"] = winner
                     if i < len(st.session_state.matches) - 1:
                         next_round_match_index = j // 2
