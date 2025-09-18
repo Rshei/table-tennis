@@ -7,7 +7,7 @@ if 'participants' not in st.session_state:
 if 'matches' not in st.session_state:
     st.session_state.matches = []
 if 'winner' not in st.session_state:
-    session_state.winner = None
+    st.session_state.winner = None
 
 # App title
 st.title("Workplace Table Tennis Tournament")
