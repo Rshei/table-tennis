@@ -1,2 +1,4 @@
 streamlit
-streamlit-react-flow
+yfinance
+pandas
+numpy
