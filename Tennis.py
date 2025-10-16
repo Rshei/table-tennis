@@ -60,18 +60,25 @@ portfolio_df['Current Value (USD)'] = portfolio_df['Shares'] * portfolio_df['Cur
 portfolio_df['Return %'] = ((portfolio_df['Current Price'] - portfolio_df['Cost Price (15/10/2025)']) /
                            portfolio_df['Cost Price (15/10/2025)']) * 100
 
-# Display results
-st.title("Portfolio Performance Tracker with Investment Amounts")
-st.write(f"Data as of: {datetime.now().strftime('%Y-%m-%d')}")
+# Define function to color negative returns red and positive green
+def color_return(val):
+    color = 'green' if val > 0 else 'red' if val < 0 else ''
+    return f'background-color: {color}'
 
-st.dataframe(portfolio_df.style.format({
+# Apply styling to Return % column
+styled_df = portfolio_df.style.applymap(color_return, subset=['Return %']).format({
     'Cost Price (15/10/2025)': '${:,.2f}',
     'Current Price': '${:,.2f}',
     'Invested Amount (USD)': '${:,.2f}',
     'Shares': '{:,.2f}',
     'Current Value (USD)': '${:,.2f}',
     'Return %': '{:.2f}%'
-}))
+})
+
+# Display results
+st.title("Portfolio Performance Tracker with Investment and Colored Returns")
+st.write(f"Data as of: {datetime.now().strftime('%Y-%m-%d')}")
+st.dataframe(styled_df)
 
 total_current_value = portfolio_df['Current Value (USD)'].sum()
 total_return = ((total_current_value - total_investment) / total_investment) * 100
