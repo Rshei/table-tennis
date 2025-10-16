@@ -3,7 +3,7 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime, timedelta
 
-# Portfolio with stock ticker and allocation weight
+# Portfolio stocks with allocation weights
 portfolio = {
     'UBER': 0.20,  # Uber Technologies
     'NVDA': 0.20,  # Nvidia
@@ -14,45 +14,48 @@ portfolio = {
     'VERI': 0.05   # Veritone
 }
 
-# Define dates to fetch price data
+# Define date range for fetching data with buffer for weekends/holidays
 end_date = datetime.today()
-start_date = end_date - timedelta(days=7)  # A buffer for possible market holidays
+start_date = end_date - timedelta(days=7)
 
 symbols = list(portfolio.keys())
 
-# Download historical data for the portfolio stocks
-data = yf.download(symbols, start=start_date.strftime('%Y-%m-%d'), end=end_date.strftime('%Y-%m-%d'))
+# Download historical price data without auto adjustment (to keep both Close and Adj Close if available)
+data = yf.download(symbols, start=start_date.strftime('%Y-%m-%d'), end=end_date.strftime('%Y-%m-%d'), auto_adjust=False)
 
-# Adjusted close prices
-adj_close = data['Adj Close']
+# If 'Adj Close' is missing (common issue), use 'Close' as fallback
+if 'Adj Close' in data.columns.levels[0]:
+    price_data = data['Adj Close']
+else:
+    price_data = data['Close']
 
-# Cost price is yesterday's closing price (last available close before today)
-cost_prices = adj_close.iloc[-2]
+# Extract yesterday's close prices as cost basis
+cost_prices = price_data.iloc[-2]
 
-# Create dataframe to track portfolio
+# Current price simulated as last available close price
+current_prices = price_data.iloc[-1]
+
+# Create portfolio dataframe to track holdings
 portfolio_df = pd.DataFrame({
     'Weight': [portfolio[s] for s in symbols],
-    'Cost Price': cost_prices
+    'Cost Price': cost_prices,
+    'Current Price': current_prices
 })
 
-# Current price is today's last available close price (simulate 'today's price')
-current_prices = adj_close.iloc[-1]
+# Calculate current position values based on allocation and price changes
+total_investment = 7000
+portfolio_df['Position Value Today'] = portfolio_df['Weight'] * total_investment * portfolio_df['Current Price'] / portfolio_df['Cost Price']
 
-portfolio_df['Current Price'] = current_prices
-
-# Assume total investment of $7000 allocated according to weights
-portfolio_df['Position Value Today'] = portfolio_df['Weight'] * 7000 * portfolio_df['Current Price'] / portfolio_df['Cost Price']
-
-# Calculate unrealized profit/loss percentage
+# Calculate unrealized profit/loss percentage per stock
 portfolio_df['Unrealized P/L %'] = (portfolio_df['Current Price'] / portfolio_df['Cost Price'] - 1) * 100
 
-# Calculate total portfolio value
+# Calculate total portfolio value today
 total_value_today = portfolio_df['Position Value Today'].sum()
 
-# Streamlit app UI
+# Streamlit UI
 st.title('Stock Portfolio Status Tracker')
 
-st.write(f'Date: {adj_close.index[-1].strftime("%Y-%m-%d")}')
+st.write(f'Date: {price_data.index[-1].strftime("%Y-%m-%d")}')
 
 st.write('### Portfolio Holdings')
 st.dataframe(portfolio_df.style.format({
@@ -64,4 +67,4 @@ st.dataframe(portfolio_df.style.format({
 
 st.write(f'### Total Portfolio Value Today: ${total_value_today:,.2f}')
 
-st.write("Cost price is set to yesterday's closing price. Current price is today's last close price for simulation.")
+st.write("Note: Cost price is set to yesterday's closing price. Current price is today's last close for simulation purposes.")
