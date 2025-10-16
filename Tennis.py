@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 # Portfolio stocks with allocation weights
 portfolio = {
-    'UBER': 0.20,  # Uber Technologies
+    'UBER': 0.20*100,  # Uber Technologies
     'NVDA': 0.20,  # Nvidia
     'MSFT': 0.15,  # Microsoft
     'JPM': 0.15,   # JPMorgan Chase
