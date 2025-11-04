@@ -56,6 +56,9 @@ portfolio_df['Shares'] = portfolio_df['Invested Amount (USD)'] / portfolio_df['C
 # Calculate current value of the shares
 portfolio_df['Current Value (USD)'] = portfolio_df['Shares'] * portfolio_df['Current Price']
 
+# Calculate current profit of the shares
+portfolio_df['profit(USD)'] = portfolio_df['Current Value (USD)'] - portfolio_df['Invested Amount (USD)']
+
 # Calculate returns
 portfolio_df['Return %'] = ((portfolio_df['Current Price'] - portfolio_df['Cost Price (15/10/2025)']) /
                            portfolio_df['Cost Price (15/10/2025)']) * 100
@@ -72,7 +75,8 @@ styled_df = portfolio_df.style.applymap(color_return, subset=['Return %']).forma
     'Invested Amount (USD)': '${:,.2f}',
     'Shares': '{:,.2f}',
     'Current Value (USD)': '${:,.2f}',
-    'Return %': '{:.2f}%'
+    'Return %': '{:.2f}%',
+    'profit(USD)' : '${:,.2f}'
 })
 
 # Display results
