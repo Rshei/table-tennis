@@ -80,7 +80,7 @@ styled_df = portfolio_df.style.applymap(color_return, subset=['Return %']).forma
 })
 
 # Display results
-st.title("Portfolio Performance Tracker with Investment and Colored Returns")
+st.title(" Perplexity AI Portfolio Performance Tracker")
 st.write(f"Data as of: {datetime.now().strftime('%Y-%m-%d')}")
 st.dataframe(styled_df)
 
