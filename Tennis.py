@@ -88,4 +88,5 @@ total_current_value = portfolio_df['Current Value (USD)'].sum()
 total_return = ((total_current_value - total_investment) / total_investment) * 100
 
 st.write(f"### Total portfolio value today: ${total_current_value:,.2f}")
+st.write(f"### Total portfolio P/L: ${total_current_value-total_investment:,.2f}")
 st.write(f"### Total portfolio return since 15/10/2025: {total_return:.2f}%")
