@@ -9,8 +9,8 @@ symbols = ['UBER', 'NVDA', 'MSFT', 'JPM', 'BAC', 'ABT', 'VERI']
 # Fetch historical data for 15th October 2025 for all stocks
 historical_data = yf.download(
     tickers=symbols,
-    start='2025-10-11',
-    end='2025-10-11',
+    start='2010-10-11',
+    end='2010-10-12',
     interval='1d',
     progress=False
 )
